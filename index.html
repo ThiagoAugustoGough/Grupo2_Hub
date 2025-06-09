@@ -19,54 +19,75 @@
     </nav>
   </header>
 
+   <div class="progress-bar-container">
+    <div class="progress-bar">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+  </div>
+
   <main>
-    <section class="steps-container">
-      <div class="step-card">
+    <section class="steps-container" id="stepsContainer">
+      <div class="step-card" data-step="1">
         <div class="step-title">Passo 1</div>
         <div class="step-description">Fazer de alimentos in natura ou minimamente processados a base da alimentação.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="2">
         <div class="step-title">Passo 2</div>
         <div class="step-description">Utilizar óleos, gorduras, sal e açúcar em pequenas quantidades ao temperar e cozinhar alimentos e criar preparações culinárias.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="3">
         <div class="step-title">Passo 3</div>
         <div class="step-description">Limitar o consumo de alimentos processados.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="4">
         <div class="step-title">Passo 4</div>
         <div class="step-description">Evitar o consumo de alimentos ultraprocessados.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="5">
         <div class="step-title">Passo 5</div>
         <div class="step-description">Comer com regularidade e atenção, em ambientes apropriados e, sempre que possível, com companhia.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="6">
         <div class="step-title">Passo 6</div>
         <div class="step-description">Fazer compras em locais que ofertem variedades de alimentos in natura ou minimamente processados.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="7">
         <div class="step-title">Passo 7</div>
         <div class="step-description">Desenvolver, exercitar e partilhar habilidades culinárias.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="8">
         <div class="step-title">Passo 8</div>
         <div class="step-description">Planejar o uso do tempo para dar à alimentação o espaço que ela merece.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="9">
         <div class="step-title">Passo 9</div>
         <div class="step-description">Dar preferência, quando fora de casa, a locais que servem refeições feitas na hora.</div>
       </div>
-      <div class="step-card">
+      <div class="step-card" data-step="10">
         <div class="step-title">Passo 10</div>
         <div class="step-description">Ser crítico quanto a informações, orientações e mensagens sobre alimentação veiculadas em propagandas comerciais.</div>
       </div>
     </section>
+    <div class="reset-button-container">
+      <button onclick="resetProgress()">Reiniciar Todos os Desafios</button>
+    </div>
   </main>
+
+  <div class="modal" id="challengeModal">
+    <div class="modal-content">
+      <h2 id="challengeTitle"></h2>
+      <p id="challengeText"></p>
+      <input type="text" id="userResponse" placeholder="Digite sua resposta aqui..." />
+      <br />
+      <button onclick="completeChallenge()">Concluir Desafio</button>
+      <button class="cancel" onclick="cancelChallenge()">Cancelar</button>
+    </div>
+  </div>
 
   <footer>
     &copy; 2025 Avokiddo - Uma alimentação saudável para todos! 🍏
   </footer>
 
+    <script src="scripts/script.js"></script>
 </body>
 </html>

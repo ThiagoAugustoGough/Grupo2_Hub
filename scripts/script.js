@@ -1,0 +1,85 @@
+    const stepsContainer = document.getElementById('stepsContainer');
+    const progressFill = document.getElementById('progressFill');
+    const modal = document.getElementById('challengeModal');
+    const challengeTitle = document.getElementById('challengeTitle');
+    const challengeText = document.getElementById('challengeText');
+    const userResponse = document.getElementById('userResponse');
+
+    const challenges = {
+      1: 'Escreva 3 frutas que você mais gosta.',
+      2: 'Dê um exemplo de alimento in natura.',
+      3: 'Cite 2 alimentos processados que consome.',
+      4: 'Qual alimento ultraprocessado você pode evitar hoje?',
+      5: 'Com quem você costuma fazer refeições?',
+      6: 'Onde você costuma comprar seus alimentos?',
+      7: 'Qual sua receita favorita para compartilhar?',
+      8: 'Quantas refeições você planejou esta semana?',
+      9: 'Dê um exemplo de restaurante com comida caseira.',
+      10: 'Já viu alguma propaganda que parecia enganar? Qual?'
+    };
+
+    let completedSteps = JSON.parse(localStorage.getItem('completedSteps')) || [];
+    let stepResponses = JSON.parse(localStorage.getItem('stepResponses')) || {};
+    let currentStep = null;
+
+    // Adiciona o evento de clique aos cards fixos para abrir o modal
+    document.querySelectorAll('.step-card').forEach(card => {
+      card.addEventListener('click', () => openChallengeModal(parseInt(card.dataset.step)));
+      // Marca os cards como completos caso estejam salvos
+      if (completedSteps.includes(parseInt(card.dataset.step))) {
+        card.classList.add('completed');
+      }
+    });
+
+    function updateProgress() {
+      const percent = (completedSteps.length / 10) * 100;
+      progressFill.style.width = `${percent}%`;
+    }
+
+    function saveProgress() {
+      localStorage.setItem('completedSteps', JSON.stringify(completedSteps));
+      localStorage.setItem('stepResponses', JSON.stringify(stepResponses));
+    }
+
+    function openChallengeModal(step) {
+      currentStep = step;
+      challengeTitle.textContent = `Desafio do Passo ${step}`;
+      challengeText.textContent = challenges[step];
+      userResponse.value = stepResponses[step] || '';
+      modal.style.display = 'flex';
+    }
+
+    function completeChallenge() {
+      const response = userResponse.value.trim();
+      if (!response) {
+        alert('Por favor, responda o desafio antes de concluir.');
+        return;
+      }
+      stepResponses[currentStep] = response;
+      if (!completedSteps.includes(currentStep)) {
+        completedSteps.push(currentStep);
+        document.querySelector(`.step-card[data-step='${currentStep}']`).classList.add('completed');
+      }
+      updateProgress();
+      saveProgress();
+      alert('🎉 Avokiddo está orgulhoso de você!');
+      modal.style.display = 'none';
+    }
+
+    function cancelChallenge() {
+      modal.style.display = 'none';
+    }
+
+    function resetProgress() {
+      if (confirm('Tem certeza que deseja reiniciar todos os desafios?')) {
+        completedSteps = [];
+        stepResponses = {};
+        localStorage.removeItem('completedSteps');
+        localStorage.removeItem('stepResponses');
+        document.querySelectorAll('.step-card').forEach(card => card.classList.remove('completed'));
+        updateProgress();
+        modal.style.display = 'none';
+      }
+    }
+
+    updateProgress();
