@@ -1,9 +1,16 @@
+:root {
+  --background-principal:#81c784;
+  --background-secundario:#f0fff4;
+  --background-footer-option1:#e0f2f1;
+}
+
+
 html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       font-family: 'Poppins', sans-serif;
-      background-color: #f0fff4;
+      background-color: var(--background-secundario);
       color: #333;
     }
 
@@ -13,7 +20,7 @@ html, body {
     }
 
     header {
-      background-color: #81c784;
+      background-color: var(--background-principal);
       padding: 20px;
       display: flex;
       align-items: center;
@@ -72,6 +79,6 @@ html, body {
     footer {
       text-align: center;
       padding: 20px;
-      background-color: #e0f2f1;
+      background-color: var(--background-footer-option1);
       font-size: 0.85rem;
     }
