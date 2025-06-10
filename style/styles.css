@@ -104,7 +104,7 @@ main {
   transform: scale(1.03);
 }
 
-.step-card.completed {
+.step-card:not(.completed) {
     background-color: var(--card-complete-background);
 }
 
@@ -192,18 +192,6 @@ footer {
   padding: 20px;
   background-color: #e0f2f1;
   font-size: 0.85rem;
-}
-
-.footer-link {
-  color: #4caf50;
-  text-decoration: none;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.footer-link:hover {
-  color: #388e3c;
-  text-decoration: underline;
 }
 
 .footer-link {
