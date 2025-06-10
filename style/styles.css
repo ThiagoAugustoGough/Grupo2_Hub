@@ -96,8 +96,8 @@ main {
   transform: scale(1.03);
 }
 
-.step-card.completed {
-    background-color: var(--card-complete-background);
+.step-card:not(.completed) {
+  background-color: var(--background-secundario);
 }
 
 .step-title {
@@ -186,6 +186,17 @@ footer {
   font-size: 0.85rem;
 }
 
+.footer-link {
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #388e3c;
+  text-decoration: underline;
+}
 
 /* === STYLES FOR THE GAME MODAL === */
 #game-container {
@@ -228,4 +239,31 @@ footer {
 #close-game-btn:hover {
     transform: scale(1.1);
     background: #e53935; /* Lighter red on hover */
+}
+
+
+@media (max-width: 768px) {
+  header {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 20px;
+  }
+
+  header .logo {
+    margin-bottom: 10px;
+  }
+
+  header nav {
+    width: 100%;
+  }
+
+  header nav ul {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  header nav ul li {
+    width: 100%;
+  }
 }
