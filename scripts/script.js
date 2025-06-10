@@ -66,6 +66,13 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('stepResponses', JSON.stringify(stepResponses));
     }
 
+    window.addEventListener('click',function closeFinalModal() { // CORRIJIR FUNÇÃO PARA QUANDO CLICAR NO BOTÃO CHAMAR A FUNÇÃO
+        const finalModal = document.getElementById('finalModal');
+        if (finalModal) {
+            finalModal.style.display = 'none';
+        }
+    });
+
     function markStepAsComplete(step) {
         if (!completedSteps.includes(step)) {
             completedSteps.push(step);
@@ -78,7 +85,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveProgress();
         }
     }
-    
+
     // ---===[ TEXT CHALLENGE MODAL FUNCTIONS ]===---
     window.openChallengeModal = function(step) {
         currentStep = step;
@@ -87,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
         userResponse.value = stepResponses[step] || '';
         challengeModal.style.display = 'flex';
     }
-
+    
     window.completeChallenge = function() {
         const response = userResponse.value.trim();
         if (!response) {
@@ -95,8 +102,17 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         stepResponses[currentStep] = response;
+
         markStepAsComplete(currentStep);
         alert('🎉 Avokiddo está orgulhoso de você!');
+
+        // Se todos os passos forem concluídos, mostra o modal final
+        if (completedSteps.length === 10) {
+            setTimeout(() => {
+                document.getElementById('finalModal').style.display = 'flex';
+            }, 300); // pequeno delay para dar tempo do modal do desafio fechar
+        }
+
         challengeModal.style.display = 'none';
     }
 
