@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
 :root {
   --background-secundario:#81c784;
   --background-principal:#f0fff4;
@@ -33,6 +35,12 @@ header {
   align-items: center;
   justify-content: space-between;
   color: white;
+}
+
+.header {
+  & h1{
+    font-family: "Montserrat", sans-serif;
+  }
 }
 
 .logo {
@@ -87,26 +95,22 @@ main {
   transition: transform 0.2s, background-color 0.2s;
   cursor: pointer;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
 }
 
 .step-card:hover {
   transform: scale(1.03);
 }
 
-.step-card.completed {
-    background-color: var(--card-complete-background);
+.step-card:not(.completed) {
+    background-color: var(--background-secundario);
 }
+
 
 .step-title {
   font-weight: 600;
-  /* Aumenta o tamanho da fonte para deixá-la maior */
-  font-size: 1.8rem; 
-  margin-bottom: 15px; /* Aumentei um pouco a margem para dar mais espaço */
-  /* Garante que o texto esteja centralizado horizontalmente */
-  text-align: center; 
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .step-description {
@@ -184,6 +188,18 @@ footer {
   padding: 20px;
   background-color: #e0f2f1;
   font-size: 0.85rem;
+}
+
+.footer-link {
+  color: #4caf50;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.footer-link:hover {
+  color: #388e3c;
+  text-decoration: underline;
 }
 
 
