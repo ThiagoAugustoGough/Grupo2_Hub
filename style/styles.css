@@ -1,125 +1,189 @@
-/* === Original Base Styles === */
 :root {
-    --background-principal: #81c784;
-    --background-secundario: #f0fff4;
-    --background-footer-option1: #e0f2f1;
+  --background-secundario:#81c784;
+  --background-principal:#f0fff4;
+  --background-footer-option1:#e0f2f1;
+
+  /* Progress bar */
+  --background-progress-bar:#c8e6c9;
+  --progress-color-fill:#388e3c;
+
+  /* Cards */
+  --card-complete-background:#dcedc8;
+  --description-card-color:#666;
 }
 
 html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    font-family: 'Poppins', sans-serif;
-    background-color: var(--background-secundario);
-    color: #333;
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--background-principal);
+  color: #333;
 }
 
 body {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+  display: flex;
+  flex-direction: column;
 }
 
 header {
-    background-color: var(--background-principal);
-    padding: 20px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    color: white;
+  background-color: var(--background-secundario);
+  padding: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: white;
 }
 
 .logo {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .logo img {
-    height: 50px;
-    margin-right: 10px;
+  height: 50px;
+  margin-right: 10px;
 }
 
 main {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.progress-bar-container {
+  background-color: var(--background-footer-option1);
+  padding: 10px 30px;
+}
+
+.progress-bar {
+  width: 100%;
+  height: 20px;
+  background-color: var(--background-progress-bar);
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background-color: var(--progress-color-fill);
+  width: 0%;
+  transition: width 0.3s ease-in-out;
 }
 
 .steps-container {
-    flex: 1;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-    gap: 20px;
-    padding: 30px;
+  flex: 1;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 30px;
 }
 
 .step-card {
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    padding: 20px;
-    transition: transform 0.2s;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
+  background: white;
+  border-radius: 20px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 20px;
+  transition: transform 0.2s, background-color 0.2s;
+  cursor: pointer;
+  position: relative;
 }
 
 .step-card:hover {
-    transform: scale(1.03);
+  transform: scale(1.03);
 }
 
+.step-card.completed {
+    background-color: var(--card-complete-background);
+}
+
+
 .step-title {
-    font-weight: 600;
-    font-size: 1.2rem;
-    margin-bottom: 10px;
+  font-weight: 600;
+  font-size: 1.2rem;
+  margin-bottom: 10px;
+  text-align: center;
 }
 
 .step-description {
-    font-size: 0.95rem;
-    color: #666;
+  font-size: 0.95rem;
+  color: var(--description-card-color);
+}
+
+.modal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(0,0,0,0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+    
+.modal-content {
+  background: white;
+  padding: 30px;
+  border-radius: 15px;
+  max-width: 500px;
+  text-align: center;
+}
+
+.modal-content h2 {
+  margin-bottom: 15px;
+}
+    
+.modal-content p {
+  margin-bottom: 20px;
+}
+
+.modal-content input {
+  padding: 10px;
+  width: 80%;
+  margin-bottom: 20px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+}
+    
+.modal-content button {
+  background-color: #81c784;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  margin: 5px;
+}
+
+.modal-content button.cancel {
+  background-color: #e57373;
+}
+
+.reset-button-container {
+  text-align: center;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+.reset-button-container button {
+  background-color: #ff7043;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
 }
 
 footer {
-    text-align: center;
-    padding: 20px;
-    background-color: var(--background-footer-option1);
-    font-size: 0.85rem;
+  text-align: center;
+  padding: 20px;
+  background-color: #e0f2f1;
+  font-size: 0.85rem;
 }
 
-/* === New Game Modal Styles === */
 
-/* Style for the card that launches the game */
-#passo4-launcher {
-    border: 2px dashed var(--background-principal);
-    background-color: #e8f5e9; /* A slightly different green */
-}
-
-#passo4-launcher .step-title {
-    color: #2e7d32; /* A darker green for the title */
-}
-
-/* This is the full-screen dark background */
-#game-modal {
-    position: fixed; /* Sits on top of all other content */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000; /* Ensures it's on top */
-    transition: opacity 0.3s ease-in-out;
-}
-
-/* This class will be toggled by JavaScript to show/hide the modal */
-#game-modal.hidden {
-    display: none;
-    opacity: 0;
-}
-
-/* This is the white container holding the canvas and close button */
+/* === STYLES FOR THE GAME MODAL === */
 #game-container {
     position: relative;
     padding: 20px;
@@ -130,7 +194,6 @@ footer {
     max-width: 840px; /* Slightly wider than the canvas */
 }
 
-/* Make the canvas responsive */
 #gameCanvas {
     display: block;
     width: 100%;
@@ -139,7 +202,6 @@ footer {
     border-radius: 8px;
 }
 
-/* Style for the 'X' close button */
 #close-game-btn {
     position: absolute;
     top: -15px;

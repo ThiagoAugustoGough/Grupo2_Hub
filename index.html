@@ -4,86 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Avokiddo</title>
-    <!-- Use placeholder for icon or ensure path is correct -->
-    <link rel="icon" href="img/Avokiddo.png">
+    <!-- Corrected path for icon -->
+    <link rel="icon" href="./img/Avokiddo.png">
+    <!-- Corrected path for stylesheet -->
     <link rel="stylesheet" href="./style/styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
     <header>
         <div class="logo">
-            <!-- Use placeholder for logo or ensure path is correct -->
-            <img class="image-avokiddo" src="img/Avokiddo.png" alt="Avokiddo">
+             <!-- Corrected path for image -->
+            <img class="image-avokiddo" src="./img/Avokiddo.png" alt="Avokiddo">
             <h1>Avokiddo</h1>
         </div>
-        <nav>
-            <strong>10 Passos Saudáveis</strong>
-        </nav>
+    <nav>
+      <strong>10 Passos Saudáveis</strong>
+    </nav>
     </header>
 
-    <main>
-        <section class="steps-container">
-            <div class="step-card">
-                <div class="step-title">Passo 1</div>
-                <div class="step-description">Fazer de alimentos in natura ou minimamente processados a base da alimentação.</div>
-            </div>
-            <div class="step-card">
-                <div class="step-title">Passo 2</div>
-                <div class="step-description">Utilizar óleos, gorduras, sal e açúcar em pequenas quantidades ao temperar e cozinhar alimentos e criar preparações culinárias.</div>
-            </div>
-            <div class="step-card">
-                <div class="step-title">Passo 3</div>
-                <div class="step-description">Limitar o consumo de alimentos processados.</div>
-            </div>
-            
-            <!-- MODIFIED: Added an id to this card to make it clickable -->
-            <div class="step-card" id="passo4-launcher">
-                <div class="step-title">Passo 4</div>
-                <div class="step-description">Evitar o consumo de alimentos ultraprocessados. <strong>(Clique para jogar!)</strong></div>
-            </div>
-
-            <div class="step-card">
-                <div class="step-title">Passo 5</div>
-                <div class="step-description">Comer com regularidade e atenção, em ambientes apropriados e, sempre que possível, com companhia.</div>
-            </div>
-            <div class="step-card">
-                <div class="step-title">Passo 6</div>
-                <div class="step-description">Fazer compras em locais que ofertem variedades de alimentos in natura ou minimamente processados.</div>
-            </div>
-            <div class="step-card">
-                <div class="step-title">Passo 7</div>
-                <div class="step-description">Desenvolver, exercitar e partilhar habilidades culinárias.</div>
-            </div>
-            <div class="step-card">
-                <div class="step-title">Passo 8</div>
-                <div class="step-description">Planejar o uso do tempo para dar à alimentação o espaço que ela merece.</div>
-            </div>
-            <div class="step-card">
-                <div class="step-title">Passo 9</div>
-                <div class="step-description">Dar preferência, quando fora de casa, a locais que servem refeições feitas na hora.</div>
-            </div>
-            <div class="step-card">
-                <div class="step-title">Passo 10</div>
-                <div class="step-description">Ser crítico quanto a informações, orientações e mensagens sobre alimentação veiculadas em propagandas comerciais.</div>
-            </div>
-
-            <!-- REMOVED: The extra game-launcher card has been deleted -->
-        </section>
-    </main>
-
-    <!-- The game modal remains the same -->
-    <div id="game-modal" class="hidden">
-        <div id="game-container">
-            <button id="close-game-btn">&times;</button>
-            <canvas id="gameCanvas" width="800" height="450"></canvas>
-        </div>
+   <div class="progress-bar-container">
+    <div class="progress-bar">
+      <div class="progress-bar-fill" id="progressFill"></div>
     </div>
+  </div>
 
-    <footer>
-        &copy; 2025 Avokiddo - Uma alimentação saudável para todos! 🍏
-    </footer>
+  <main>
+    <section class="steps-container" id="stepsContainer">
+      <div class="step-card" data-step="1">
+        <div class="step-title">Passo 1</div>
+        <div class="step-description">Fazer de alimentos in natura ou minimamente processados a base da alimentação.</div>
+      </div>
+      <div class="step-card" data-step="2">
+        <div class="step-title">Passo 2</div>
+        <div class="step-description">Utilizar óleos, gorduras, sal e açúcar em pequenas quantidades ao temperar e cozinhar alimentos e criar preparações culinárias.</div>
+      </div>
+      <div class="step-card" data-step="3">
+        <div class="step-title">Passo 3</div>
+        <div class="step-description">Limitar o consumo de alimentos processados.</div>
+      </div>
+      <div class="step-card" data-step="4">
+        <div class="step-title">Passo 4</div>
+        <div class="step-description">Evitar o consumo de alimentos ultraprocessados.</div>
+      </div>
+      <div class="step-card" data-step="5">
+        <div class="step-title">Passo 5</div>
+        <div class="step-description">Comer com regularidade e atenção, em ambientes apropriados e, sempre que possível, com companhia.</div>
+      </div>
+      <div class="step-card" data-step="6">
+        <div class="step-title">Passo 6</div>
+        <div class="step-description">Fazer compras em locais que ofertem variedades de alimentos in natura ou minimamente processados.</div>
+      </div>
+      <div class="step-card" data-step="7">
+        <div class="step-title">Passo 7</div>
+        <div class="step-description">Desenvolver, exercitar e partilhar habilidades culinárias.</div>
+      </div>
+      <div class="step-card" data-step="8">
+        <div class="step-title">Passo 8</div>
+        <div class="step-description">Planejar o uso do tempo para dar à alimentação o espaço que ela merece.</div>
+      </div>
+      <div class="step-card" data-step="9">
+        <div class="step-title">Passo 9</div>
+        <div class="step-description">Dar preferência, quando fora de casa, a locais que servem refeições feitas na hora.</div>
+      </div>
+      <div class="step-card" data-step="10">
+        <div class="step-title">Passo 10</div>
+        <div class="step-description">Ser crítico quanto a informações, orientações e mensagens sobre alimentação veiculadas em propagandas comerciais.</div>
+      </div>
+    </section>
+    <div class="reset-button-container">
+      <button onclick="resetProgress()">Reiniciar Todos os Desafios</button>
+    </div>
+  </main>
 
-    <script src="js/game.js"></script>
+  <!-- This is the original modal for text challenges -->
+  <div class="modal" id="challengeModal">
+    <div class="modal-content">
+      <h2 id="challengeTitle"></h2>
+      <p id="challengeText"></p>
+      <input type="text" id="userResponse" placeholder="Digite sua resposta aqui..." />
+      <br />
+      <button onclick="completeChallenge()">Concluir Desafio</button>
+      <button class="cancel" onclick="closeChallengeModal()">Cancelar</button>
+    </div>
+  </div>
 
+  <!-- NEW: This is the dedicated modal for the game -->
+  <div class="modal" id="gameModal">
+      <div id="game-container">
+          <button id="close-game-btn">&times;</button>
+          <canvas id="gameCanvas" width="800" height="450"></canvas>
+      </div>
+  </div>
+
+  <footer>
+    &copy; 2025 Avokiddo - Uma alimentação saudável para todos! 🍏
+  </footer>
+
+    <!-- Corrected path for script -->
+    <script src="./scripts/script.js"></script>
 </body>
 </html>
