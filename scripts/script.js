@@ -24,11 +24,17 @@ let currentStep = null;
 
     // Adiciona o evento de clique aos cards fixos para abrir o modal
 document.querySelectorAll('.step-card').forEach(card => {
-    card.addEventListener('click', () => openChallengeModal(parseInt(card.dataset.step)));
-      // Marca os cards como completos caso estejam salvos
-    if (completedSteps.includes(parseInt(card.dataset.step))) {
+    const stepNumber = parseInt(card.dataset.step);
+
+    // Oculta a descrição inicialmente
+    if (!completedSteps.includes(stepNumber)) {
+        card.querySelector('.step-description').style.display = 'none';
+    } else {
         card.classList.add('completed');
     }
+
+    // Clique para abrir desafio
+    card.addEventListener('click', () => openChallengeModal(stepNumber));
 });
 
 function updateProgress() {
@@ -51,15 +57,20 @@ function openChallengeModal(step) {
 
 function completeChallenge() {
     const response = userResponse.value.trim();
+
     if (!response) {
         alert('Por favor, responda o desafio antes de concluir.');
         return;
     }
+
     stepResponses[currentStep] = response;
     if (!completedSteps.includes(currentStep)) {
         completedSteps.push(currentStep);
-        document.querySelector(`.step-card[data-step='${currentStep}']`).classList.add('completed');
+        const card = document.querySelector(`.step-card[data-step='${currentStep}']`);
+        card.classList.add('completed');
+        card.querySelector('.step-description').style.display = 'block';
     }
+
     updateProgress();
     saveProgress();
     alert('🎉 Avokiddo está orgulhoso de você!');
@@ -76,7 +87,11 @@ function resetProgress() {
         stepResponses = {};
         localStorage.removeItem('completedSteps');
         localStorage.removeItem('stepResponses');
-        document.querySelectorAll('.step-card').forEach(card => card.classList.remove('completed'));
+        document.querySelectorAll('.step-card').forEach(card => {
+            card.classList.remove('completed');
+            card.querySelector('.step-description').style.display = 'none'; // Oculta novamente
+        });
+        
         updateProgress();
         modal.style.display = 'none';
     }

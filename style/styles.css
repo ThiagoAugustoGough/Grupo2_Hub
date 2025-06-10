@@ -94,15 +94,15 @@ main {
   transform: scale(1.03);
 }
 
-.step-card.completed {
-  background-color: var(--card-complete-background);
-  text-decoration: line-through;
+.step-card:not(.completed) {
+  background-color: var(--background-secundario);
 }
 
 .step-title {
   font-weight: 600;
   font-size: 1.2rem;
   margin-bottom: 10px;
+  text-align: center;
 }
 
 .step-description {
