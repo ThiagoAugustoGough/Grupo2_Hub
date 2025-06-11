@@ -2,13 +2,13 @@
 
 
 :root {
-  --background-secundario:#81c784;
+  --background-secundario:#5b7910;
   --background-principal:#f0fff4;
   --background-footer-option1:#e0f2f1;
 
   /* Progress bar */
   --background-progress-bar:#c8e6c9;
-  --progress-color-fill:#388e3c;
+  --progress-color-fill:#5b7910;
 
   /* Cards */
   --card-complete-background:#dcedc8;
@@ -123,6 +123,7 @@ main {
 
 .step-card:not(.completed) {
   background-color: var(--background-secundario);
+  color: #e5e5e5;
 }
 
 
@@ -200,7 +201,7 @@ main {
 }
 
 .reset-button-container button {
-  background-color: #ff7043;
+  background-color: red;
   color: white;
   border: none;
   padding: 0.625rem 1.25rem;
@@ -213,20 +214,21 @@ main {
 footer {
   text-align: center;
   padding: 1.25rem;
-  background-color: #f5f5f5;
+  background-color: #9ea9835a; /*#b8c52843*/
   font-size: 0.85rem;
   font-family: 'Arial','sans-serif';
 }
 
 .footer-link {
-  color: #4caf50;
+  color: #5b7910;
   text-decoration: none;
+  font-size: 1.25rem;
   font-weight: 600;
   transition: color 0.3s ease;
 }
 
 .footer-link:hover {
-  color: #388e3c;
+  color: blue;
   text-decoration: underline;
 }
 
