@@ -6,6 +6,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const challengeTitle = document.getElementById('challengeTitle');
     const challengeText = document.getElementById('challengeText');
     const userResponse = document.getElementById('userResponse');
+    const step1GameModal = document.getElementById('step1GameModal');
+
 
     // ---===[ GAME ELEMENTS ]===---
     const gameModal = document.getElementById('gameModal');
@@ -18,10 +20,10 @@ document.addEventListener('DOMContentLoaded', () => {
     let stepResponses = JSON.parse(localStorage.getItem('stepResponses')) || {};
     let currentStep = null;
     const challenges = {
-        1: 'Escreva 3 frutas que você mais gosta.',
+        // Step 1 is now the drag-and-drop game
         2: 'Dê um exemplo de alimento in natura.',
         3: 'Cite 2 alimentos processados que consome.',
-        // Step 4 is the game, so it doesn't need a question.
+        // Step 4 is the runner game
         5: 'Com quem você costuma fazer refeições?',
         6: 'Onde você costuma comprar seus alimentos?',
         7: 'Qual sua receita favorita para compartilhar?',
@@ -42,20 +44,23 @@ document.addEventListener('DOMContentLoaded', () => {
                 card.querySelector('.step-description').style.display = 'none';
             }
             card.addEventListener('click', () => {
-                if (stepNumber === 4) {
+                // Route to the correct modal based on step number
+                if (stepNumber === 1) {
+                    openStep1GameModal();
+                } else if (stepNumber === 4) {
                     startGame();
                 } else {
                     openChallengeModal(stepNumber);
                 }
             });
         });
+        initializeDragAndDrop();
         updateProgress();
     }
 
 
     // ---===[ SITE & PROGRESS FUNCTIONS ]===---
     function updateProgress() {
-        // FIX: The total number of steps is 10.
         const totalSteps = 10;
         const percent = (completedSteps.length / totalSteps) * 100;
         progressFill.style.width = `${percent}%`;
@@ -66,12 +71,13 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('stepResponses', JSON.stringify(stepResponses));
     }
 
-    window.addEventListener('click',function closeFinalModal() { // CORRIJIR FUNÇÃO PARA QUANDO CLICAR NO BOTÃO CHAMAR A FUNÇÃO
+    window.closeFinalModal = function() {
         const finalModal = document.getElementById('finalModal');
         if (finalModal) {
             finalModal.style.display = 'none';
         }
-    });
+    };
+
 
     function markStepAsComplete(step) {
         if (!completedSteps.includes(step)) {
@@ -83,8 +89,94 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             updateProgress();
             saveProgress();
+
+            // Check for completion after marking a step as complete
+            if (completedSteps.length === Object.keys(challenges).length + 2) { // +2 for game steps
+                 setTimeout(() => {
+                    document.getElementById('finalModal').style.display = 'flex';
+                }, 500);
+            }
         }
     }
+
+    // ---===[ STEP 1 DRAG-AND-DROP GAME FUNCTIONS ]===---
+    let draggedItem = null;
+
+    function initializeDragAndDrop() {
+        const foodItems = document.querySelectorAll('.food-item');
+        const dropZone = document.getElementById('plate');
+
+        foodItems.forEach(item => {
+            item.addEventListener('dragstart', (e) => {
+                draggedItem = e.target;
+                setTimeout(() => e.target.style.display = 'none', 0);
+            });
+
+            item.addEventListener('dragend', () => {
+                setTimeout(() => {
+                    draggedItem.style.display = 'block';
+                    draggedItem = null;
+                }, 0);
+            });
+        });
+
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('hovered');
+        });
+
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('hovered');
+        });
+
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            if (draggedItem) {
+                dropZone.appendChild(draggedItem);
+                dropZone.classList.remove('hovered');
+            }
+        });
+    }
+
+    function openStep1GameModal() {
+        step1GameModal.style.display = 'flex';
+        // Reset feedback message
+        const feedback = document.getElementById('step1-feedback');
+        feedback.textContent = '';
+        feedback.className = 'feedback-message';
+    }
+
+    window.closeStep1GameModal = function() {
+        step1GameModal.style.display = 'none';
+    }
+
+    window.checkPlate = function() {
+        const plate = document.getElementById('plate');
+        const itemsOnPlate = Array.from(plate.querySelectorAll('.food-item'));
+        const foodOnPlate = itemsOnPlate.map(item => item.dataset.food);
+
+        const correctItems = ['arroz', 'banana', 'frango'];
+        const incorrectItems = ['nuggets', 'cenoura'];
+
+        const hasAllCorrect = correctItems.every(item => foodOnPlate.includes(item));
+        const hasNoIncorrect = !incorrectItems.some(item => foodOnPlate.includes(item));
+
+        const feedback = document.getElementById('step1-feedback');
+
+        if (hasAllCorrect && hasNoIncorrect && foodOnPlate.length === correctItems.length) {
+            feedback.textContent = 'Correto! Você montou um prato saudável e natural. Mandou bem!';
+            feedback.className = 'feedback-message correct';
+            markStepAsComplete(1);
+            setTimeout(() => {
+                closeStep1GameModal();
+                alert('🎉 Avokiddo está orgulhoso de você!');
+            }, 1500);
+        } else {
+            feedback.textContent = 'Opa, parece que tem algo errado no prato. Lembre-se: apenas alimentos in natura. Tente de novo!';
+            feedback.className = 'feedback-message incorrect';
+        }
+    }
+
 
     // ---===[ TEXT CHALLENGE MODAL FUNCTIONS ]===---
     window.openChallengeModal = function(step) {
@@ -104,16 +196,16 @@ document.addEventListener('DOMContentLoaded', () => {
         stepResponses[currentStep] = response;
 
         markStepAsComplete(currentStep);
+        challengeModal.style.display = 'none';
         alert('🎉 Avokiddo está orgulhoso de você!');
 
-        // Se todos os passos forem concluídos, mostra o modal final
+        // If all steps are completed, show the final modal
         if (completedSteps.length === 10) {
             setTimeout(() => {
                 document.getElementById('finalModal').style.display = 'flex';
-            }, 300); // pequeno delay para dar tempo do modal do desafio fechar
+            }, 300); // small delay
         }
 
-        challengeModal.style.display = 'none';
     }
 
     window.closeChallengeModal = function() {
@@ -127,16 +219,25 @@ document.addEventListener('DOMContentLoaded', () => {
             stepResponses = {};
             localStorage.removeItem('completedSteps');
             localStorage.removeItem('stepResponses');
+            
+            // Reset cards
             document.querySelectorAll('.step-card').forEach(card => {
                 card.classList.remove('completed');
                 card.querySelector('.step-description').style.display = 'none';
             });
+            
+            // Reset step 1 game by moving items back to options
+            const foodOptions = document.querySelector('.food-options');
+            const plate = document.getElementById('plate');
+            const itemsOnPlate = Array.from(plate.querySelectorAll('.food-item'));
+            itemsOnPlate.forEach(item => foodOptions.appendChild(item));
+
             updateProgress();
         }
     }
 
     // ---===================================---
-    // ---===[           GAME LOGIC          ]===---
+    // ---===[           GAME LOGIC (Step 4)   ]===---
     // ---===================================---
 
     let player, gameObstacles, gameFrameCount, score, animationFrameId;
@@ -218,7 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // NEW: Central function to trigger a jump
     function triggerJump() {
         if (!player.isJumping && gameState === 'playing') {
             player.velocityY = -20;
@@ -226,17 +326,15 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // MODIFIED: This now calls the central jump function
     function handleKeyDown(e) {
         if (e.code === 'Space' || e.code === 'ArrowUp') {
-            e.preventDefault(); // Prevents spacebar from scrolling the page
+            e.preventDefault();
             triggerJump();
         }
     }
     
-    // NEW: Handles touch events for jumping
     function handleTouch(e) {
-        e.preventDefault(); // Prevents screen from zooming or scrolling
+        e.preventDefault();
         triggerJump();
     }
 
@@ -244,7 +342,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gameModal.style.display = 'flex';
         initializeGame();
         gameLoop();
-        // Add listeners for both keyboard and touch
         document.addEventListener('keydown', handleKeyDown);
         canvas.addEventListener('touchstart', handleTouch);
     }
@@ -253,7 +350,6 @@ document.addEventListener('DOMContentLoaded', () => {
         gameState = 'stopped';
         cancelAnimationFrame(animationFrameId);
         gameModal.style.display = 'none';
-        // Remove listeners when the game stops
         document.removeEventListener('keydown', handleKeyDown);
         canvas.removeEventListener('touchstart', handleTouch);
     }
@@ -284,7 +380,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function handleRestart(e) {
         if (gameState === 'lost' && gameModal.style.display === 'flex') {
-            // Check for spacebar or a touch event
             if (e.type === 'keydown' && e.code === 'Space') {
                  initializeGame();
             } else if (e.type === 'touchstart') {
@@ -294,7 +389,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
     
-    // Add listeners for restarting the game
     document.addEventListener('keydown', handleRestart);
     canvas.addEventListener('touchstart', handleRestart);
     

@@ -296,6 +296,65 @@ footer {
   margin-top: 1.25rem;
 }
 
+/* === STYLES FOR STEP 1 DRAG-AND-DROP GAME === */
+.plate-game-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.food-options, .drop-zone {
+  width: 48%;
+  padding: 10px;
+  border: 2px dashed #ccc;
+  border-radius: 10px;
+  min-height: 200px;
+}
+
+.food-options h3, .drop-zone h3 {
+  text-align: center;
+  margin-top: 0;
+  color: #555;
+  font-family: 'Arial','sans-serif';
+}
+
+.food-item {
+  background-color: #e0f2f1;
+  color: #333;
+  padding: 10px;
+  margin-bottom: 8px;
+  border-radius: 8px;
+  cursor: grab;
+  border: 1px solid #b2dfdb;
+  text-align: center;
+  font-family: 'Arial','sans-serif';
+}
+
+.food-item:active {
+  cursor: grabbing;
+}
+
+.drop-zone.hovered {
+  background-color: #dcedc8;
+  border-color: var(--background-secundario);
+}
+
+.feedback-message {
+  margin-top: 15px;
+  font-weight: bold;
+  font-family: 'Arial','sans-serif';
+  min-height: 20px;
+}
+
+.feedback-message.correct {
+  color: #388e3c;
+}
+
+.feedback-message.incorrect {
+  color: #e53935;
+}
+
 /* --- Estilos para telas menores que 768px (mobile) --- */
 @media (max-width: 768px) {
 
