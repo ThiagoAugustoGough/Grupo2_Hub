@@ -19,7 +19,7 @@ html, body {
   margin: 0;
   padding: 0;
   height: 100%;
-  background-color: var(--background-principal);
+  background-color: #dddddd;
   color: #333;
 }
 
@@ -29,7 +29,7 @@ body {
 }
 
 header {
-  background-color: var(--background-secundario);
+  background-color: #5b7910;
   padding: 1.25rem;
   display: flex;
   align-items: center;
@@ -77,7 +77,7 @@ main {
 }
 
 .progress-bar-container {
-  background-color: var(--background-footer-option1);
+  background-color: #dddddd;
   padding: 0.625rem 1.875rem;
 }
 
@@ -213,7 +213,7 @@ main {
 footer {
   text-align: center;
   padding: 1.25rem;
-  background-color: #e0f2f1;
+  background-color: #f5f5f5;
   font-size: 0.85rem;
   font-family: 'Arial','sans-serif';
 }
@@ -293,8 +293,6 @@ footer {
   width: 100%;
   margin-top: 1.25rem;
 }
-
-
 
 /* --- Estilos para telas menores que 768px (mobile) --- */
 @media (max-width: 768px) {
