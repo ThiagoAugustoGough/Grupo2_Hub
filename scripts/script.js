@@ -362,7 +362,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
             }
-            if (player.x < gameObstacles[i].x + obstacleDrawWidth && player.x + player.width > gameObstacles[i].x && player.y < gameObstacles[i].y + obstacleDrawHeight && player.y + player.height > gameObstacles[i].y) {
+            if (player.x < gameObstacles[i].x + obstacleDrawWidth && player.x + player.width/2 > gameObstacles[i].x && player.y < gameObstacles[i].y + obstacleDrawHeight && player.y + player.height/2 > gameObstacles[i].y) {
                 loseGame();
                 return;
             }
