@@ -335,7 +335,7 @@ footer {
   cursor: grabbing;
 }
 
-.drop-zone.hovered {
+.drop-zone.hovered, .food-options.hovered {
   background-color: #dcedc8;
   border-color: var(--background-secundario);
 }
@@ -353,6 +353,12 @@ footer {
 
 .feedback-message.incorrect {
   color: #e53935;
+}
+
+.food-item.dragging {
+  position: fixed; /* Use fixed positioning to drag over other elements */
+  z-index: 1000; /* Ensure it appears on top */
+  pointer-events: none; /* Prevent the element from interfering with drop detection */
 }
 
 /* --- Estilos para telas menores que 768px (mobile) --- */

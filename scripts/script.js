@@ -91,7 +91,7 @@ document.addEventListener('DOMContentLoaded', () => {
             saveProgress();
 
             // Check for completion after marking a step as complete
-            if (completedSteps.length === Object.keys(challenges).length + 2) { // +2 for game steps
+            if (completedSteps.length === 10) { 
                  setTimeout(() => {
                     document.getElementById('finalModal').style.display = 'flex';
                 }, 500);
@@ -99,27 +99,88 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ---===[ STEP 1 DRAG-AND-DROP GAME FUNCTIONS ]===---
-    let draggedItem = null;
+    // ---===[ STEP 1 DRAG-AND-DROP GAME FUNCTIONS (NOW WITH MOBILE SUPPORT) ]===---
 
     function initializeDragAndDrop() {
         const foodItems = document.querySelectorAll('.food-item');
         const dropZone = document.getElementById('plate');
+        let draggedItem = null;
+        let touchStartX, touchStartY;
 
+        // --- Desktop Mouse Events ---
         foodItems.forEach(item => {
             item.addEventListener('dragstart', (e) => {
                 draggedItem = e.target;
-                setTimeout(() => e.target.style.display = 'none', 0);
+                setTimeout(() => e.target.style.opacity = '0.5', 0);
             });
 
             item.addEventListener('dragend', () => {
                 setTimeout(() => {
-                    draggedItem.style.display = 'block';
+                    draggedItem.style.opacity = '1';
                     draggedItem = null;
                 }, 0);
             });
         });
 
+        // --- Mobile Touch Events ---
+        foodItems.forEach(item => {
+            item.addEventListener('touchstart', (e) => {
+                draggedItem = e.target;
+                const touch = e.touches[0];
+                touchStartX = touch.clientX;
+                touchStartY = touch.clientY;
+                
+                // Style the element for dragging
+                const rect = draggedItem.getBoundingClientRect();
+                draggedItem.classList.add('dragging');
+                draggedItem.style.left = `${rect.left}px`;
+                draggedItem.style.top = `${rect.top}px`;
+                draggedItem.style.width = `${rect.width}px`;
+            }, { passive: true });
+
+            item.addEventListener('touchmove', (e) => {
+                if (!draggedItem) return;
+                e.preventDefault();
+                const touch = e.touches[0];
+                
+                // Move the item with the finger
+                const offsetX = touch.clientX - touchStartX;
+                const offsetY = touch.clientY - touchStartY;
+                const initialRect = draggedItem.getBoundingClientRect();
+                draggedItem.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
+                
+                // Check if hovering over the drop zone
+                const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (elementAtPoint === dropZone || dropZone.contains(elementAtPoint)) {
+                    dropZone.classList.add('hovered');
+                } else {
+                    dropZone.classList.remove('hovered');
+                }
+            }, { passive: false });
+
+            item.addEventListener('touchend', (e) => {
+                if (!draggedItem) return;
+
+                const touch = e.changedTouches[0];
+                const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
+                
+                // Check if dropped on the plate
+                if (elementAtPoint === dropZone || dropZone.contains(elementAtPoint)) {
+                    dropZone.appendChild(draggedItem);
+                }
+                
+                // Reset styles
+                draggedItem.classList.remove('dragging');
+                draggedItem.style.transform = '';
+                draggedItem.style.left = '';
+                draggedItem.style.top = '';
+                draggedItem.style.width = '';
+                dropZone.classList.remove('hovered');
+                draggedItem = null;
+            });
+        });
+
+        // --- Common Drop Zone Events ---
         dropZone.addEventListener('dragover', (e) => {
             e.preventDefault();
             dropZone.classList.add('hovered');
@@ -140,7 +201,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function openStep1GameModal() {
         step1GameModal.style.display = 'flex';
-        // Reset feedback message
         const feedback = document.getElementById('step1-feedback');
         feedback.textContent = '';
         feedback.className = 'feedback-message';
@@ -177,7 +237,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-
     // ---===[ TEXT CHALLENGE MODAL FUNCTIONS ]===---
     window.openChallengeModal = function(step) {
         currentStep = step;
@@ -198,14 +257,6 @@ document.addEventListener('DOMContentLoaded', () => {
         markStepAsComplete(currentStep);
         challengeModal.style.display = 'none';
         alert('🎉 Avokiddo está orgulhoso de você!');
-
-        // If all steps are completed, show the final modal
-        if (completedSteps.length === 10) {
-            setTimeout(() => {
-                document.getElementById('finalModal').style.display = 'flex';
-            }, 300); // small delay
-        }
-
     }
 
     window.closeChallengeModal = function() {
@@ -220,13 +271,11 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('completedSteps');
             localStorage.removeItem('stepResponses');
             
-            // Reset cards
             document.querySelectorAll('.step-card').forEach(card => {
                 card.classList.remove('completed');
                 card.querySelector('.step-description').style.display = 'none';
             });
             
-            // Reset step 1 game by moving items back to options
             const foodOptions = document.querySelector('.food-options');
             const plate = document.getElementById('plate');
             const itemsOnPlate = Array.from(plate.querySelectorAll('.food-item'));
@@ -237,11 +286,11 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // ---===================================---
-    // ---===[           GAME LOGIC (Step 4)   ]===---
+    // ---===[ GAME LOGIC (Step 4)   ]===---
     // ---===================================---
 
     let player, gameObstacles, gameFrameCount, score, animationFrameId;
-    let gameState = 'stopped'; // Can be 'playing', 'won', 'lost', 'stopped'
+    let gameState = 'stopped';
 
     const playerImage = new Image();
     playerImage.src = 'img/Avokiddo_pixel_no_background.png';
@@ -249,7 +298,6 @@ document.addEventListener('DOMContentLoaded', () => {
     obstacleImage.src = 'img/pixel_sausage_no_back-Photoroom.png';
 
     const obstacleDrawWidth = 60, obstacleDrawHeight = 80;
-    const obstacleHitboxWidth = 20, obstacleHitboxHeight = 40;
     
     function initializeGame() {
         player = { x: 50, y: canvas.height - 70, width: 70, height: 70, velocityY: 0, isJumping: false };
@@ -293,8 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     return;
                 }
             }
-            const hitbox = { x: gameObstacles[i].x, y: gameObstacles[i].y, width: obstacleHitboxWidth, height: obstacleHitboxHeight };
-            if (player.x < hitbox.x + hitbox.width/2 && player.x + player.width/2 > hitbox.x && player.y < hitbox.y + hitbox.height/2 && player.y + player.height/2 > hitbox.y) {
+            if (player.x < gameObstacles[i].x + obstacleDrawWidth && player.x + player.width > gameObstacles[i].x && player.y < gameObstacles[i].y + obstacleDrawHeight && player.y + player.height > gameObstacles[i].y) {
                 loseGame();
                 return;
             }
