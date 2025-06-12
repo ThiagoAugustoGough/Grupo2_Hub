@@ -99,105 +99,126 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // ---===[ STEP 1 DRAG-AND-DROP GAME FUNCTIONS (NOW WITH MOBILE SUPPORT) ]===---
+    // ---===[ STEP 1 DRAG-AND-DROP GAME FUNCTIONS (RE-FIXED: ROBUST TOUCH LOGIC) ]===---
 
     function initializeDragAndDrop() {
         const foodItems = document.querySelectorAll('.food-item');
-        const dropZone = document.getElementById('plate');
-        let draggedItem = null;
-        let touchStartX, touchStartY;
+        const plateZone = document.getElementById('plate');
+        const optionsZone = document.querySelector('.food-options');
+        const allDropZones = [plateZone, optionsZone];
 
-        // --- Desktop Mouse Events ---
+        let draggedItem = null;
+        let offsetX = 0, offsetY = 0;
+
+        // --- Mouse Events (for Desktop) ---
         foodItems.forEach(item => {
-            item.addEventListener('dragstart', (e) => {
+            item.addEventListener('dragstart', e => {
                 draggedItem = e.target;
                 setTimeout(() => e.target.style.opacity = '0.5', 0);
             });
-
             item.addEventListener('dragend', () => {
-                setTimeout(() => {
-                    draggedItem.style.opacity = '1';
-                    draggedItem = null;
-                }, 0);
-            });
-        });
-
-        // --- Mobile Touch Events ---
-        foodItems.forEach(item => {
-            item.addEventListener('touchstart', (e) => {
-                draggedItem = e.target;
-                const touch = e.touches[0];
-                touchStartX = touch.clientX;
-                touchStartY = touch.clientY;
-                
-                // Style the element for dragging
-                const rect = draggedItem.getBoundingClientRect();
-                draggedItem.classList.add('dragging');
-                draggedItem.style.left = `${rect.left}px`;
-                draggedItem.style.top = `${rect.top}px`;
-                draggedItem.style.width = `${rect.width}px`;
-            }, { passive: true });
-
-            item.addEventListener('touchmove', (e) => {
-                if (!draggedItem) return;
-                e.preventDefault();
-                const touch = e.touches[0];
-                
-                // Move the item with the finger
-                const offsetX = touch.clientX - touchStartX;
-                const offsetY = touch.clientY - touchStartY;
-                const initialRect = draggedItem.getBoundingClientRect();
-                draggedItem.style.transform = `translate(${offsetX}px, ${offsetY}px)`;
-                
-                // Check if hovering over the drop zone
-                const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
-                if (elementAtPoint === dropZone || dropZone.contains(elementAtPoint)) {
-                    dropZone.classList.add('hovered');
-                } else {
-                    dropZone.classList.remove('hovered');
-                }
-            }, { passive: false });
-
-            item.addEventListener('touchend', (e) => {
-                if (!draggedItem) return;
-
-                const touch = e.changedTouches[0];
-                const elementAtPoint = document.elementFromPoint(touch.clientX, touch.clientY);
-                
-                // Check if dropped on the plate
-                if (elementAtPoint === dropZone || dropZone.contains(elementAtPoint)) {
-                    dropZone.appendChild(draggedItem);
-                }
-                
-                // Reset styles
-                draggedItem.classList.remove('dragging');
-                draggedItem.style.transform = '';
-                draggedItem.style.left = '';
-                draggedItem.style.top = '';
-                draggedItem.style.width = '';
-                dropZone.classList.remove('hovered');
+                if (draggedItem) draggedItem.style.opacity = '1';
                 draggedItem = null;
             });
         });
 
-        // --- Common Drop Zone Events ---
-        dropZone.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            dropZone.classList.add('hovered');
-        });
+        // --- Touch Events (for Mobile) ---
+        document.addEventListener('touchstart', e => {
+            if (!e.target.classList.contains('food-item')) return;
+            
+            draggedItem = e.target;
+            const touch = e.touches[0];
+            const rect = draggedItem.getBoundingClientRect();
 
-        dropZone.addEventListener('dragleave', () => {
-            dropZone.classList.remove('hovered');
-        });
+            // Calculate offset of touch from element's top-left corner
+            offsetX = touch.clientX - rect.left;
+            offsetY = touch.clientY - rect.top;
 
-        dropZone.addEventListener('drop', (e) => {
-            e.preventDefault();
-            if (draggedItem) {
-                dropZone.appendChild(draggedItem);
-                dropZone.classList.remove('hovered');
+            // Style the element for dragging
+            draggedItem.classList.add('dragging');
+            draggedItem.style.left = `${touch.clientX - offsetX}px`;
+            draggedItem.style.top = `${touch.clientY - offsetY}px`;
+            draggedItem.style.width = `${rect.width}px`;
+
+        }, { passive: false });
+
+        document.addEventListener('touchmove', e => {
+            if (!draggedItem) return;
+            e.preventDefault(); // Prevent scrolling while dragging
+
+            const touch = e.touches[0];
+            
+            // Move the item with the finger
+            draggedItem.style.left = `${touch.clientX - offsetX}px`;
+            draggedItem.style.top = `${touch.clientY - offsetY}px`;
+
+            // Check for hover over any drop zone
+            allDropZones.forEach(zone => {
+                const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+                if (zone === elementUnderTouch || zone.contains(elementUnderTouch)) {
+                    zone.classList.add('hovered');
+                } else {
+                    zone.classList.remove('hovered');
+                }
+            });
+        }, { passive: false });
+
+        document.addEventListener('touchend', e => {
+            if (!draggedItem) return;
+            
+            const touch = e.changedTouches[0];
+            const elementUnderTouch = document.elementFromPoint(touch.clientX, touch.clientY);
+            let droppedZone = null;
+
+            // Find which drop zone the item was released over
+            if (allDropZones.includes(elementUnderTouch)) {
+                droppedZone = elementUnderTouch;
+            } else {
+                let parent = elementUnderTouch;
+                while(parent) {
+                    if (allDropZones.includes(parent)) {
+                        droppedZone = parent;
+                        break;
+                    }
+                    parent = parent.parentElement;
+                }
             }
+
+            if (droppedZone) {
+                droppedZone.appendChild(draggedItem);
+            }
+            
+            // Reset styles on the dragged item
+            draggedItem.classList.remove('dragging');
+            draggedItem.style.left = '';
+            draggedItem.style.top = '';
+            draggedItem.style.width = '';
+
+            // Remove hover styles from all zones
+            allDropZones.forEach(zone => zone.classList.remove('hovered'));
+
+            draggedItem = null;
+        });
+
+        // --- Common Drop Zone Events (for Desktop) ---
+        allDropZones.forEach(zone => {
+            zone.addEventListener('dragover', e => {
+                e.preventDefault();
+                zone.classList.add('hovered');
+            });
+            zone.addEventListener('dragleave', () => {
+                zone.classList.remove('hovered');
+            });
+            zone.addEventListener('drop', e => {
+                e.preventDefault();
+                if (draggedItem) {
+                    zone.appendChild(draggedItem);
+                }
+                zone.classList.remove('hovered');
+            });
         });
     }
+
 
     function openStep1GameModal() {
         step1GameModal.style.display = 'flex';
