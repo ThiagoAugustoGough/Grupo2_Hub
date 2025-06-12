@@ -132,7 +132,7 @@ document.addEventListener('DOMContentLoaded', () => {
     obstacleImage.src = 'img/pixel_sausage_no_back-Photoroom.png';
 
     const obstacleDrawWidth = 60, obstacleDrawHeight = 80;
-    const obstacleHitboxWidth = 15, obstacleHitboxHeight = 30;
+    const obstacleHitboxWidth = 20, obstacleHitboxHeight = 40;
     
     function initializeGame() {
         player = { x: 50, y: canvas.height - 70, width: 70, height: 70, velocityY: 0, isJumping: false };
